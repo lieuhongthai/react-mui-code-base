@@ -5,6 +5,10 @@ export const theme = extendTheme({
   // CSS Variables will be automatically generated for all theme tokens
   cssVarPrefix: 'mui',
 
+  // Enable manual mode switching via class attribute
+  // This allows setMode() to work properly
+  colorSchemeSelector: 'class',
+
   // Color schemes for light and dark modes
   colorSchemes: {
     light: {

@@ -14,22 +14,13 @@ interface ThemeProviderProps {
 
 // Internal component to sync MUI color scheme with Zustand store
 function ThemeSync() {
-  const { mode, setTheme } = useThemeStore();
-  const { mode: muiMode, setMode } = useColorScheme();
+  const { mode } = useThemeStore();
+  const { setMode } = useColorScheme();
 
-  // Sync Zustand -> MUI
+  // Sync Zustand -> MUI (one-way sync to avoid infinite loop)
   useEffect(() => {
-    if (muiMode !== mode) {
-      setMode(mode);
-    }
-  }, [mode, muiMode, setMode]);
-
-  // Sync MUI -> Zustand (when changed by MUI)
-  useEffect(() => {
-    if (muiMode && muiMode !== mode) {
-      setTheme(muiMode as 'light' | 'dark');
-    }
-  }, [muiMode, mode, setTheme]);
+    setMode(mode);
+  }, [mode, setMode]);
 
   return null;
 }

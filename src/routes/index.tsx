@@ -1,5 +1,8 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { Typography, Box, Button, Stack } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import { Layout } from '@/components/Layout';

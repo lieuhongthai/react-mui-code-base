@@ -1,19 +1,15 @@
 import type { ReactNode } from 'react';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Box,
-  Container,
-  Button,
-  Stack,
-} from '@mui/material';
-import {
-  Home as HomeIcon,
-  CheckCircle as TodoIcon,
-  Lock as LockIcon,
-  Public as PublicIcon,
-} from '@mui/icons-material';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import HomeIcon from '@mui/icons-material/Home';
+import TodoIcon from '@mui/icons-material/CheckCircle';
+import LockIcon from '@mui/icons-material/Lock';
+import PublicIcon from '@mui/icons-material/Public';
 import { Link } from '@tanstack/react-router';
 import { ThemeToggle } from './ThemeToggle';
 

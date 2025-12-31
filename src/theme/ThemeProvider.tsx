@@ -4,7 +4,7 @@ import {
   ThemeProvider as MuiThemeProvider,
   useColorScheme,
 } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
 import { theme } from './theme';
 import { useThemeStore } from '@/stores/themeStore';
 

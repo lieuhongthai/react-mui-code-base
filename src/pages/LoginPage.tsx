@@ -4,7 +4,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
-  Container,
   Box,
   Paper,
   TextField,
@@ -14,6 +13,7 @@ import {
 } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -65,16 +65,21 @@ export function LoginPage() {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Paper elevation={3} sx={{ p: 4, width: '100%' }}>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+      }}
+    >
+      <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
+        <ThemeToggle />
+      </Box>
+
+      <Box sx={{ width: '100%', maxWidth: 480, px: 3 }}>
+        <Paper elevation={3} sx={{ p: 4 }}>
           <Typography component="h1" variant="h4" align="center" gutterBottom>
             {t('auth.loginTitle')}
           </Typography>
@@ -137,6 +142,6 @@ export function LoginPage() {
           </Box>
         </Paper>
       </Box>
-    </Container>
+    </Box>
   );
 }

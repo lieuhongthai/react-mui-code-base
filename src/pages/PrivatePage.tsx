@@ -1,17 +1,17 @@
-import { Container, Typography, Box, Paper, Button, Chip, Stack } from '@mui/material';
+import { Typography, Box, Paper, Button, Chip, Stack } from '@mui/material';
 import { Link } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import LockIcon from '@mui/icons-material/Lock';
 import { useAuth } from '@/hooks/useAuth';
+import { Layout } from '@/components/Layout';
 
 export function PrivatePage() {
   const { t } = useTranslation();
   const { user, hasRole, hasAnyRole } = useAuth();
 
   return (
-    <Container maxWidth="md">
-      <Box sx={{ my: 4 }}>
-        <Paper elevation={3} sx={{ p: 4 }}>
+    <Layout>
+      <Paper elevation={3} sx={{ p: 4 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
             <LockIcon sx={{ fontSize: 40, mr: 2, color: 'secondary.main' }} />
             <Typography variant="h3" component="h1">
@@ -87,8 +87,7 @@ export function PrivatePage() {
               {t('pages.public')}
             </Button>
           </Box>
-        </Paper>
-      </Box>
-    </Container>
+      </Paper>
+    </Layout>
   );
 }

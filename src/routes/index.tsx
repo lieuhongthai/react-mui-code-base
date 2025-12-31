@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { Container, Typography, Box, Button, Stack } from '@mui/material';
+import { Typography, Box, Button, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
+import { Layout } from '@/components/Layout';
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -12,8 +13,8 @@ function HomePage() {
   const { isAuthenticated, user, logout } = useAuth();
 
   return (
-    <Container maxWidth="md">
-      <Box sx={{ my: 4 }}>
+    <Layout>
+      <Box>
         <Typography variant="h3" component="h1" gutterBottom>
           {t('common.welcome')}
         </Typography>
@@ -68,6 +69,6 @@ function HomePage() {
           )}
         </Stack>
       </Box>
-    </Container>
+    </Layout>
   );
 }

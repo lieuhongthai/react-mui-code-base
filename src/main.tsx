@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { EmotionCacheProvider } from '@/providers/EmotionCacheProvider';
 import { ThemeProvider } from '@/theme/ThemeProvider';
 import { UIProvider } from '@/providers/UIProvider';
 import { queryClient } from '@/config/queryClient';
@@ -24,13 +25,15 @@ declare module '@tanstack/react-router' {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <UIProvider>
-          <RouterProvider router={router} />
-          {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
-        </UIProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <EmotionCacheProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <UIProvider>
+            <RouterProvider router={router} />
+            {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+          </UIProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </EmotionCacheProvider>
   </StrictMode>
 );

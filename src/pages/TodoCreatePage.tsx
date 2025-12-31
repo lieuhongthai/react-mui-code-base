@@ -45,20 +45,6 @@ export function TodoCreatePage() {
         This demo uses JSONPlaceholder API. The todo will be created but won't persist on the server.
       </Alert>
 
-      {/* Error Alert */}
-      {createMutation.isError && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          Failed to create todo: {createMutation.error.message}
-        </Alert>
-      )}
-
-      {/* Success Alert */}
-      {createMutation.isSuccess && (
-        <Alert severity="success" sx={{ mb: 3 }}>
-          Todo created successfully! Redirecting...
-        </Alert>
-      )}
-
       {/* Form */}
       <Paper sx={{ p: 3 }}>
         <TodoForm

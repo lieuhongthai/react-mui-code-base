@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { EmotionCacheProvider } from '@/providers/EmotionCacheProvider';
 import { ThemeProvider } from '@/theme/ThemeProvider';
 import { UIProvider } from '@/providers/UIProvider';
+import { ToastProvider } from '@/providers/ToastProvider';
 import { queryClient } from '@/config/queryClient';
 import '@/i18n/config';
 import './index.css';
@@ -29,6 +30,7 @@ createRoot(document.getElementById('root')!).render(
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
           <UIProvider>
+            <ToastProvider />
             <RouterProvider router={router} />
             {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
           </UIProvider>

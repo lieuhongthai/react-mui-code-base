@@ -1,3 +1,6 @@
+import { useEffect } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -13,17 +16,23 @@ import Alert from '@mui/material/Alert';
 import AddIcon from '@mui/icons-material/Add';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
+import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from '@tanstack/react-router';
 import { TodoList } from '@/components/TodoList';
 import { useTodos } from '@/hooks/useTodos';
 import { useQueryFilters, serializers } from '@/hooks/useQueryFilters';
+import {
+  todoSearchSchema,
+  todoSearchDefaults,
+  type TodoSearchFormData,
+} from '@/schemas/todoSearchSchema';
 import type { TodoFilters } from '@/types/todo';
 
 export function TodosPage() {
   const navigate = useNavigate();
 
   // Use query filters hook to persist filters in URL
-  const { filters, setFilter, resetFilters } = useQueryFilters<TodoFilters>({
+  const { filters, setFilters, resetFilters } = useQueryFilters<TodoFilters>({
     defaultValues: {
       completed: undefined,
       userId: undefined,
@@ -43,7 +52,47 @@ export function TodosPage() {
     },
   });
 
+  // React Hook Form with Zod validation
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<TodoSearchFormData>({
+    resolver: zodResolver(todoSearchSchema) as any,
+    defaultValues: todoSearchDefaults,
+  });
+
+  // Initialize form with URL filters on mount
+  useEffect(() => {
+    reset({
+      completed: filters.completed === undefined
+        ? ''
+        : filters.completed
+        ? 'true'
+        : 'false',
+      userId: filters.userId?.toString() ?? '',
+      limit: filters._limit?.toString() ?? '20',
+    });
+  }, []); // Only on mount
+
   const { data: todos = [], isLoading, error, refetch } = useTodos(filters);
+
+  // Handle form submission - only apply filters on Search
+  const onSubmit = (data: TodoSearchFormData) => {
+    setFilters({
+      completed:
+        data.completed === '' ? undefined : data.completed === 'true',
+      userId: data.userId ? parseInt(data.userId) : undefined,
+      _limit: data.limit ? parseInt(data.limit) : 20,
+    });
+  };
+
+  // Handle clear filters
+  const handleClearFilters = () => {
+    reset(todoSearchDefaults);
+    resetFilters();
+  };
 
   const handleCreateClick = () => {
     navigate({ to: '/todos/create' });
@@ -63,14 +112,6 @@ export function TodosPage() {
             Todo List
           </Typography>
           <Stack direction="row" spacing={2}>
-            <Button
-              variant="outlined"
-              startIcon={<FilterListOffIcon />}
-              onClick={resetFilters}
-              size="small"
-            >
-              Clear Filters
-            </Button>
             <Button
               variant="outlined"
               startIcon={<RefreshIcon />}
@@ -94,64 +135,98 @@ export function TodosPage() {
         </Typography>
       </Box>
 
-      {/* Filters */}
-      <Paper sx={{ p: 2, mb: 3 }}>
+      {/* Search Form with React Hook Form + Zod Validation */}
+      <Paper
+        component="form"
+        onSubmit={handleSubmit(onSubmit)}
+        sx={{ p: 3, mb: 3 }}
+      >
         <Typography variant="h6" gutterBottom>
-          Filters
+          Search & Filter
         </Typography>
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-          <FormControl size="small" sx={{ minWidth: 150 }}>
-            <InputLabel>Status</InputLabel>
-            <Select
-              value={
-                filters.completed === undefined
-                  ? ''
-                  : filters.completed
-                  ? 'true'
-                  : 'false'
-              }
-              label="Status"
-              onChange={(e) => {
-                const value = e.target.value as 'true' | 'false' | '';
-                setFilter(
-                  'completed',
-                  value === '' ? undefined : value === 'true'
-                );
-              }}
+
+        <Stack spacing={3}>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={2}
+            alignItems="flex-start"
+          >
+            {/* Status Filter */}
+            <Controller
+              name="completed"
+              control={control}
+              render={({ field }) => (
+                <FormControl size="small" sx={{ minWidth: 150 }}>
+                  <InputLabel>Status</InputLabel>
+                  <Select {...field} label="Status">
+                    <MenuItem value="">All</MenuItem>
+                    <MenuItem value="true">Completed</MenuItem>
+                    <MenuItem value="false">Active</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
+            />
+
+            {/* User ID with Validation */}
+            <Controller
+              name="userId"
+              control={control}
+              render={({ field }) => (
+                <FormControl error={!!errors.userId}>
+                  <TextField
+                    {...field}
+                    size="small"
+                    label="User ID"
+                    placeholder="e.g. 1"
+                    error={!!errors.userId}
+                    helperText={
+                      errors.userId?.message ||
+                      'Enter a valid number (try typing text to see validation)'
+                    }
+                    sx={{ width: 200 }}
+                  />
+                </FormControl>
+              )}
+            />
+
+            {/* Limit with Validation */}
+            <Controller
+              name="limit"
+              control={control}
+              render={({ field }) => (
+                <FormControl error={!!errors.limit}>
+                  <TextField
+                    {...field}
+                    size="small"
+                    label="Limit"
+                    placeholder="1-100"
+                    error={!!errors.limit}
+                    helperText={errors.limit?.message || 'Max 100'}
+                    sx={{ width: 150 }}
+                  />
+                </FormControl>
+              )}
+            />
+          </Stack>
+
+          {/* Action Buttons */}
+          <Stack direction="row" spacing={2}>
+            <Button
+              type="submit"
+              variant="contained"
+              startIcon={<SearchIcon />}
+              disabled={isLoading}
             >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="true">Completed</MenuItem>
-              <MenuItem value="false">Active</MenuItem>
-            </Select>
-          </FormControl>
-
-          <TextField
-            size="small"
-            label="User ID"
-            type="number"
-            value={filters.userId ?? ''}
-            onChange={(e) =>
-              setFilter(
-                'userId',
-                e.target.value ? parseInt(e.target.value) : undefined
-              )
-            }
-            sx={{ width: 150 }}
-          />
-
-          <TextField
-            size="small"
-            label="Limit"
-            type="number"
-            value={filters._limit ?? 20}
-            onChange={(e) =>
-              setFilter(
-                '_limit',
-                e.target.value ? parseInt(e.target.value) : 20
-              )
-            }
-            sx={{ width: 150 }}
-          />
+              Search
+            </Button>
+            <Button
+              variant="outlined"
+              startIcon={<FilterListOffIcon />}
+              onClick={handleClearFilters}
+            >
+              Clear Filters
+            </Button>
+          </Stack>
         </Stack>
       </Paper>
 

@@ -1,5 +1,20 @@
 import type { ReactNode } from 'react';
-import { AppBar, Toolbar, Typography, Box, Container } from '@mui/material';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Box,
+  Container,
+  Button,
+  Stack,
+} from '@mui/material';
+import {
+  Home as HomeIcon,
+  CheckCircle as TodoIcon,
+  Lock as LockIcon,
+  Public as PublicIcon,
+} from '@mui/icons-material';
+import { Link } from '@tanstack/react-router';
 import { ThemeToggle } from './ThemeToggle';
 
 interface LayoutProps {
@@ -19,10 +34,50 @@ export function Layout({
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {showAppBar && (
         <AppBar position="static" color="default" elevation={1}>
-          <Toolbar sx={{ justifyContent: 'space-between' }}>
+          <Toolbar sx={{ justifyContent: 'space-between', gap: 2 }}>
             <Typography variant="h6" component="div" sx={{ fontWeight: 600 }}>
               {title}
             </Typography>
+
+            <Stack direction="row" spacing={1} sx={{ flexGrow: 1, ml: 4 }}>
+              <Button
+                component={Link}
+                to="/"
+                startIcon={<HomeIcon />}
+                color="inherit"
+                size="small"
+              >
+                Home
+              </Button>
+              <Button
+                component={Link}
+                to="/todos"
+                startIcon={<TodoIcon />}
+                color="inherit"
+                size="small"
+              >
+                Todos
+              </Button>
+              <Button
+                component={Link}
+                to="/public"
+                startIcon={<PublicIcon />}
+                color="inherit"
+                size="small"
+              >
+                Public
+              </Button>
+              <Button
+                component={Link}
+                to="/private"
+                startIcon={<LockIcon />}
+                color="inherit"
+                size="small"
+              >
+                Private
+              </Button>
+            </Stack>
+
             <ThemeToggle />
           </Toolbar>
         </AppBar>

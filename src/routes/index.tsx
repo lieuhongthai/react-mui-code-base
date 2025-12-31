@@ -36,8 +36,17 @@ function HomePage() {
         <Stack spacing={2} direction="row" sx={{ mt: 3 }}>
           <Button
             component={Link}
-            to="/public"
+            to="/todos"
             variant="contained"
+            color="primary"
+          >
+            Todo List
+          </Button>
+
+          <Button
+            component={Link}
+            to="/public"
+            variant="outlined"
             color="primary"
           >
             {t('pages.public')}

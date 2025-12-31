@@ -19,6 +19,7 @@ import type {
   UpdateTodoDto,
   TodoFilters,
 } from '@/types/todo';
+import { toast } from '@/utils/toast';
 
 /**
  * Query keys for todos
@@ -72,9 +73,22 @@ export function useCreateTodo(
 
   return useMutation({
     mutationFn: createTodo,
-    onSuccess: () => {
+    onSuccess: (data, ...args) => {
+      // Show success toast
+      toast.created('Todo');
+
       // Invalidate and refetch todos list
       queryClient.invalidateQueries({ queryKey: todoKeys.lists() });
+
+      // Call user's onSuccess if provided
+      options?.onSuccess?.(data, ...args);
+    },
+    onError: (error, ...args) => {
+      // Show error toast
+      toast.createError(error);
+
+      // Call user's onError if provided
+      options?.onError?.(error, ...args);
     },
     ...options,
   });
@@ -90,10 +104,23 @@ export function useUpdateTodo(
 
   return useMutation({
     mutationFn: ({ id, data }) => updateTodo(id, data),
-    onSuccess: (data) => {
+    onSuccess: (data, ...args) => {
+      // Show success toast
+      toast.updated('Todo');
+
       // Invalidate specific todo and list
       queryClient.invalidateQueries({ queryKey: todoKeys.detail(data.id) });
       queryClient.invalidateQueries({ queryKey: todoKeys.lists() });
+
+      // Call user's onSuccess if provided
+      options?.onSuccess?.(data, ...args);
+    },
+    onError: (error, ...args) => {
+      // Show error toast
+      toast.updateError(error);
+
+      // Call user's onError if provided
+      options?.onError?.(error, ...args);
     },
     ...options,
   });
@@ -109,9 +136,22 @@ export function useDeleteTodo(
 
   return useMutation({
     mutationFn: deleteTodo,
-    onSuccess: () => {
+    onSuccess: (...args) => {
+      // Show success toast
+      toast.deleted('Todo');
+
       // Invalidate todos list
       queryClient.invalidateQueries({ queryKey: todoKeys.lists() });
+
+      // Call user's onSuccess if provided
+      options?.onSuccess?.(...args);
+    },
+    onError: (error, ...args) => {
+      // Show error toast
+      toast.deleteError(error);
+
+      // Call user's onError if provided
+      options?.onError?.(error, ...args);
     },
     ...options,
   });
@@ -127,10 +167,25 @@ export function useToggleTodo(
 
   return useMutation({
     mutationFn: ({ id, completed }) => toggleTodo(id, completed),
-    onSuccess: (_data, { id }) => {
+    onSuccess: (data, { id }, ...args) => {
+      // Show success toast
+      toast.success(
+        data.completed ? 'Todo marked as completed' : 'Todo marked as active'
+      );
+
       // Invalidate and refetch after successful mutation
       queryClient.invalidateQueries({ queryKey: todoKeys.detail(id) });
       queryClient.invalidateQueries({ queryKey: todoKeys.lists() });
+
+      // Call user's onSuccess if provided
+      options?.onSuccess?.(data, { id, completed: data.completed }, ...args);
+    },
+    onError: (error, ...args) => {
+      // Show error toast
+      toast.error('Failed to update todo status');
+
+      // Call user's onError if provided
+      options?.onError?.(error, ...args);
     },
     ...options,
   });

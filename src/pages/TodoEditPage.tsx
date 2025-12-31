@@ -87,20 +87,6 @@ export function TodoEditPage() {
         This demo uses JSONPlaceholder API. Changes are simulated and won't persist on the server.
       </Alert>
 
-      {/* Error Alert */}
-      {updateMutation.isError && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          Failed to update todo: {updateMutation.error.message}
-        </Alert>
-      )}
-
-      {/* Success Alert */}
-      {updateMutation.isSuccess && (
-        <Alert severity="success" sx={{ mb: 3 }}>
-          Todo updated successfully! Redirecting...
-        </Alert>
-      )}
-
       {/* Form */}
       <Paper sx={{ p: 3 }}>
         <TodoForm

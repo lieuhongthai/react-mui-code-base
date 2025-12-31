@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -13,25 +12,38 @@ import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 import AddIcon from '@mui/icons-material/Add';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import { useNavigate } from '@tanstack/react-router';
 import { TodoList } from '@/components/TodoList';
 import { useTodos } from '@/hooks/useTodos';
+import { useQueryFilters, serializers } from '@/hooks/useQueryFilters';
 import type { TodoFilters } from '@/types/todo';
 
 export function TodosPage() {
   const navigate = useNavigate();
-  const [filters, setFilters] = useState<TodoFilters>({
-    _limit: 20,
+
+  // Use query filters hook to persist filters in URL
+  const { filters, setFilter, resetFilters } = useQueryFilters<TodoFilters>({
+    defaultValues: {
+      completed: undefined,
+      userId: undefined,
+      _limit: 20,
+    },
+    serializers: {
+      completed: serializers.optionalBoolean(),
+      userId: serializers.optionalNumber(),
+      _limit: {
+        serialize: (value) => String(value ?? 20),
+        deserialize: (value) => {
+          const num = parseInt(value, 10);
+          return isNaN(num) ? 20 : num;
+        },
+        defaultValue: 20,
+      },
+    },
   });
 
   const { data: todos = [], isLoading, error, refetch } = useTodos(filters);
-
-  const handleFilterChange = (key: keyof TodoFilters, value: any) => {
-    setFilters((prev) => ({
-      ...prev,
-      [key]: value === '' ? undefined : value,
-    }));
-  };
 
   const handleCreateClick = () => {
     navigate({ to: '/todos/create' });
@@ -51,6 +63,14 @@ export function TodosPage() {
             Todo List
           </Typography>
           <Stack direction="row" spacing={2}>
+            <Button
+              variant="outlined"
+              startIcon={<FilterListOffIcon />}
+              onClick={resetFilters}
+              size="small"
+            >
+              Clear Filters
+            </Button>
             <Button
               variant="outlined"
               startIcon={<RefreshIcon />}
@@ -83,11 +103,21 @@ export function TodosPage() {
           <FormControl size="small" sx={{ minWidth: 150 }}>
             <InputLabel>Status</InputLabel>
             <Select
-              value={filters.completed ?? ''}
-              label="Status"
-              onChange={(e) =>
-                handleFilterChange('completed', e.target.value)
+              value={
+                filters.completed === undefined
+                  ? ''
+                  : filters.completed
+                  ? 'true'
+                  : 'false'
               }
+              label="Status"
+              onChange={(e) => {
+                const value = e.target.value as 'true' | 'false' | '';
+                setFilter(
+                  'completed',
+                  value === '' ? undefined : value === 'true'
+                );
+              }}
             >
               <MenuItem value="">All</MenuItem>
               <MenuItem value="true">Completed</MenuItem>
@@ -101,7 +131,7 @@ export function TodosPage() {
             type="number"
             value={filters.userId ?? ''}
             onChange={(e) =>
-              handleFilterChange(
+              setFilter(
                 'userId',
                 e.target.value ? parseInt(e.target.value) : undefined
               )
@@ -115,9 +145,9 @@ export function TodosPage() {
             type="number"
             value={filters._limit ?? 20}
             onChange={(e) =>
-              handleFilterChange(
+              setFilter(
                 '_limit',
-                e.target.value ? parseInt(e.target.value) : undefined
+                e.target.value ? parseInt(e.target.value) : 20
               )
             }
             sx={{ width: 150 }}

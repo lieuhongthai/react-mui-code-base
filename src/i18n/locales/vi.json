@@ -1,0 +1,31 @@
+{
+  "common": {
+    "welcome": "Chào mừng",
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "submit": "Gửi",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "loading": "Đang tải..."
+  },
+  "auth": {
+    "loginTitle": "Đăng nhập vào tài khoản",
+    "loginSubtitle": "Nhập thông tin đăng nhập để truy cập tài khoản",
+    "emailRequired": "Email là bắt buộc",
+    "passwordRequired": "Mật khẩu là bắt buộc",
+    "loginSuccess": "Đăng nhập thành công",
+    "loginError": "Đăng nhập thất bại. Vui lòng kiểm tra thông tin",
+    "logoutSuccess": "Đăng xuất thành công",
+    "unauthorized": "Bạn không có quyền truy cập trang này"
+  },
+  "pages": {
+    "home": "Trang chủ",
+    "public": "Trang công khai",
+    "private": "Trang riêng tư",
+    "notFound": "Không tìm thấy trang"
+  }
+}

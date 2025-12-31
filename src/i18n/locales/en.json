@@ -1,0 +1,31 @@
+{
+  "common": {
+    "welcome": "Welcome",
+    "login": "Login",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading..."
+  },
+  "auth": {
+    "loginTitle": "Login to your account",
+    "loginSubtitle": "Enter your credentials to access your account",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "loginSuccess": "Login successful",
+    "loginError": "Login failed. Please check your credentials",
+    "logoutSuccess": "Logout successful",
+    "unauthorized": "You are not authorized to access this page"
+  },
+  "pages": {
+    "home": "Home",
+    "public": "Public Page",
+    "private": "Private Page",
+    "notFound": "Page Not Found"
+  }
+}

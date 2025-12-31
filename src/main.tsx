@@ -4,6 +4,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ThemeProvider } from '@/theme/ThemeProvider';
+import { UIProvider } from '@/providers/UIProvider';
 import { queryClient } from '@/config/queryClient';
 import '@/i18n/config';
 import './index.css';
@@ -25,8 +26,10 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <RouterProvider router={router} />
-        {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+        <UIProvider>
+          <RouterProvider router={router} />
+          {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+        </UIProvider>
       </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>

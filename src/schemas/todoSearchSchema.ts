@@ -15,7 +15,7 @@ export const todoSearchSchema = z.object({
    */
   userId: z
     .string()
-    .optional()
+    .default('')
     .refine(
       (val) => {
         if (!val || val.trim() === '') return true; // Empty is valid
@@ -32,7 +32,7 @@ export const todoSearchSchema = z.object({
    */
   limit: z
     .string()
-    .optional()
+    .default('20')
     .refine(
       (val) => {
         if (!val || val.trim() === '') return true;

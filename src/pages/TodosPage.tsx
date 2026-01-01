@@ -59,7 +59,7 @@ export function TodosPage() {
     reset,
     formState: { errors },
   } = useForm<TodoSearchFormData>({
-    resolver: zodResolver(todoSearchSchema) as any,
+    resolver: zodResolver(todoSearchSchema),
     defaultValues: todoSearchDefaults,
   });
 
